@@ -4,6 +4,7 @@
   "url": "https://fhir.twiin.nl/ig/notifiedpull-stu3/ImplementationGuide/nl.twiin.fhir.stu3.notifiedpull",
   "version": "0.1.0",
   "name": "TwiinNotifiedPullSTU3",
+  "title": "Notified Pull (STU3)",
   "status": "draft",
   "date": "2026-10-08",
   "publisher": "Twiin",
@@ -18,27 +19,27 @@
       ]
     }
   ],
-  "copyright": "Licensed under CC BY-SA 4.0 (SPDX: CC-BY-SA-4.0), https://creativecommons.org/licenses/by-sa/4.0/",
-  "fhirVersion": "3.0.2",
-  "package": [
-    {
-      "name": "profiles",
-      "description": "Profiles",
-      "resource": [
-        {
-          "example": false,
-          "name": "Notified Pull Task",
-          "description": "Skeleton profile on Task.",
-          "sourceReference": {
-            "reference": "StructureDefinition/notifiedpull-task"
-          }
-        }
-      ]
-    }
+  "copyright": "Copyright Twiin. Licensed under CC BY-SA 4.0, https://creativecommons.org/licenses/by-sa/4.0/",
+  "packageId": "nl.twiin.fhir.stu3.notifiedpull",
+  "license": "CC-BY-SA-4.0",
+  "fhirVersion": [
+    "3.0.2"
   ],
-  "page": {
-    "source": "index.html",
-    "title": "Notified Pull (STU3)",
-    "kind": "page"
+  "definition": {
+    "resource": [
+      {
+        "reference": {
+          "reference": "StructureDefinition/notifiedpull-task"
+        },
+        "name": "Notified Pull Task",
+        "description": "Skeleton profile on Task.",
+        "exampleBoolean": false
+      }
+    ],
+    "page": {
+      "nameUrl": "index.html",
+      "title": "Notified Pull (STU3)",
+      "generation": "markdown"
+    }
   }
 }
