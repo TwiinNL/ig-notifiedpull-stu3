@@ -1,0 +1,52 @@
+name: Build IG
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+
+      - name: Install Jekyll
+        run: gem install jekyll
+
+      # Pinned: the errors check below depends on the qa.json layout of this version.
+      - name: Download IG Publisher
+        env:
+          PUBLISHER_VERSION: 3.0.0
+        run: |
+          mkdir -p input-cache
+          curl -sSfL -o input-cache/publisher.jar \
+            "https://github.com/HL7/fhir-ig-publisher/releases/download/${PUBLISHER_VERSION}/publisher.jar"
+
+      - name: Build IG
+        run: java -jar input-cache/publisher.jar -ig .
+
+      - name: Upload build output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ig-output
+          path: output/
+          if-no-files-found: warn
+
+      # The publisher exits with 0 even when qa.html reports errors, so check the
+      # errors ourselves: every error in output/qa.xml must be listed in known-errors.txt.
+      - name: Fail on unknown errors in QA report
+        run: python3 .github/scripts/check-qa.py
