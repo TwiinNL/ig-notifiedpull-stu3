@@ -1,0 +1,31 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "notifiedpull-task",
+  "url": "https://fhir.twiin.nl/ig/notifiedpull-stu3/StructureDefinition/notifiedpull-task",
+  "version": "0.1.0",
+  "name": "NotifiedPullTask",
+  "title": "Notified Pull Task",
+  "status": "draft",
+  "date": "2026-10-08",
+  "publisher": "Twiin",
+  "description": "Skeleton profile on Task (STU3) with a single trivial constraint.",
+  "fhirVersion": "3.0.2",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Task",
+  "baseDefinition": "http://hl7.org/fhir/StructureDefinition/Task",
+  "derivation": "constraint",
+  "differential": {
+    "element": [
+      {
+        "id": "Task",
+        "path": "Task"
+      },
+      {
+        "id": "Task.owner",
+        "path": "Task.owner",
+        "min": 1
+      }
+    ]
+  }
+}
