@@ -1,0 +1,5 @@
+output/
+temp/
+template/
+input-cache/publisher.jar
+.DS_Store
