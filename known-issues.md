@@ -2,6 +2,7 @@
 
 Errors reported in `output/qa.html` that do not originate from this repository's files.
 Nothing is suppressed: `input/ignoreWarnings.txt` contains no entries.
+All 9 errors are allowlisted in [known-errors.txt](known-errors.txt), which the CI check (`.github/scripts/check-qa.py`) compares against `output/qa.xml`. Messages are Dutch: the publisher takes `nl_NL` as narrative language from `ImplementationGuide.jurisdiction=NL`, independent of the JVM locale.
 
 Evidence applies to: IG Publisher 3.0.0 (Git# 7d1c5ae624df, built 2026-10-08), template
 `fhir.base.template#current` (package date 20260708163541), `hl7.fhir.r3.core#3.0.2`,
