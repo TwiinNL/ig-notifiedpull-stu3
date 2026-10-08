@@ -26,6 +26,8 @@ Requires Java and Jekyll (no SUSHI: the source is handwritten JSON).
 
 `.github/workflows/build.yml` runs on pull requests and pushes to `main`: install of Java and Jekyll, download of IG Publisher 3.0.0 (pinned), build, upload of `output/` (including `qa.html`) as artifact `ig-output`.
 
+The runner is pinned to `ubuntu-24.04` (not `ubuntu-latest`), so a change of the GitHub-hosted image does not alter the build unnoticed. Moving to a newer Ubuntu gets its own PR.
+
 The build fails on every publisher error that is not listed in [known-errors.txt](known-errors.txt) (see [known-issues.md](known-issues.md)). The publisher exit code cannot be used for this: it exits with 0 on a build whose `qa.html` lists errors (see [ig-core](https://github.com/TwiinNL/ig-core)). Warnings and hints do not fail the build. Errors cannot be suppressed via `input/ignoreWarnings.txt`.
 
 `.github/scripts/check-qa.py` reads the individual errors from `output/qa.xml`, a FHIR Bundle of OperationOutcomes written by the publisher. Chosen over the alternatives because it is structured (severity, message and expression as separate elements): `qa.txt` and `qa-eslintcompact.txt` are text for humans, and they carry absolute local paths or no location. Each error becomes one line `<location>: <message>`, with the issue's `expression` as location (file name if there is none), and must match a line in `known-errors.txt` exactly. Matching is on text and location, not on count. As a cross-check the script requires the number of errors in `qa.xml` to equal `errs` in `output/qa.json`, and fails otherwise.
