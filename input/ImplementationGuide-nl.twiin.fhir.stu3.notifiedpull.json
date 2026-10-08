@@ -1,6 +1,7 @@
 {
   "resourceType": "ImplementationGuide",
   "id": "nl.twiin.fhir.stu3.notifiedpull",
+  "language": "en",
   "url": "https://fhir.twiin.nl/ig/notifiedpull-stu3/ImplementationGuide/nl.twiin.fhir.stu3.notifiedpull",
   "version": "0.1.0",
   "name": "TwiinNotifiedPullSTU3",
