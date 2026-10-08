@@ -1,0 +1,44 @@
+{
+  "resourceType": "ImplementationGuide",
+  "id": "nl.twiin.fhir.stu3.notifiedpull",
+  "url": "https://fhir.twiin.nl/ig/notifiedpull-stu3/ImplementationGuide/nl.twiin.fhir.stu3.notifiedpull",
+  "version": "0.1.0",
+  "name": "TwiinNotifiedPullSTU3",
+  "status": "draft",
+  "date": "2026-10-08",
+  "publisher": "Twiin",
+  "description": "FHIR STU3 implementation guide for the Notified Pull pattern in the Twiin Afsprakenstelsel.",
+  "jurisdiction": [
+    {
+      "coding": [
+        {
+          "system": "urn:iso:std:iso:3166",
+          "code": "NL"
+        }
+      ]
+    }
+  ],
+  "copyright": "Licensed under CC BY-SA 4.0 (SPDX: CC-BY-SA-4.0), https://creativecommons.org/licenses/by-sa/4.0/",
+  "fhirVersion": "3.0.2",
+  "package": [
+    {
+      "name": "profiles",
+      "description": "Profiles",
+      "resource": [
+        {
+          "example": false,
+          "name": "Notified Pull Task",
+          "description": "Skeleton profile on Task.",
+          "sourceReference": {
+            "reference": "StructureDefinition/notifiedpull-task"
+          }
+        }
+      ]
+    }
+  ],
+  "page": {
+    "source": "index.html",
+    "title": "Notified Pull (STU3)",
+    "kind": "page"
+  }
+}
