@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "name": "NotifiedPullTask",
   "title": "Notified Pull Task",
-  "status": "bogus",
+  "status": "draft",
   "date": "2026-10-08",
   "publisher": "Twiin",
   "description": "Skeleton profile on Task (STU3) with a single trivial constraint.",
