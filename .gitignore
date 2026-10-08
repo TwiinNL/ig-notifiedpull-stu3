@@ -3,3 +3,5 @@ temp/
 template/
 input-cache/publisher.jar
 .DS_Store
+Requirements-fromNarrative.json
+input-cache/
