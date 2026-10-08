@@ -24,7 +24,15 @@
       {
         "id": "Task.owner",
         "path": "Task.owner",
-        "min": 1
+        "min": 1,
+        "constraint": [
+          {
+            "key": "tmp-1",
+            "severity": "error",
+            "human": "Deliberate CI test",
+            "expression": "owner.((("
+          }
+        ]
       }
     ]
   }
