@@ -60,6 +60,17 @@ Workaround: `input/images/assets/images/nld.svg`, a file written for this reposi
 
 Remove `input/images/assets/images/nld.svg` and the flag check in `test/lang-redirects.test.js` when a template version that puts the flag in `output/en/` is used: the build then has 0 broken links without the file.
 
+
+### Release label not shown in the page header
+
+Without a workaround the header shows `<version> - ` without the `releaselabel` parameter in `input/ImplementationGuide-nl.twiin.fhir.stu3.notifiedpull.json`. Cause: `includes/fragment-pagebegin.html:64` of the template reads `site.data.info.releaselabellang[include.lang]` (`include.lang` is `en` there), but `_data/info.json`, written by `scripts/onGenerate.genJson.xslt:71-83`, only has `releaselabel`. The script writes a fixed list of keys, so no IG parameter can supply `releaselabellang`. Fixed upstream in [HL7/ig-template-base2 6fc5321](https://github.com/HL7/ig-template-base2/commit/6fc5321) (2025-11-20, reads `site.data.fhir.releaseLabellang`), not in a published version.
+
+Workaround: `input/includes/fragment-pagebegin.html` is the template file of 0.1.0 (sha-256 `431379c0d2dabaa855c2d57f051b08e9f0d00cb23bdf70447845bf63170996f9`), copied verbatim with only line 64 changed to `{% assign status = site.data.info.releaselabel %}`. The publisher puts `input/includes/` over the template's includes.
+
+The CI step "Test release label" (`test/release-label.test.js`) checks that every page in `output/en/` with the template header (`<div id="ig-status">`) shows the label, and fails if `template/includes/fragment-pagebegin.html` is no longer the 0.1.0 file: then the override must be reviewed, because it would replace a newer template file. `searchform.html` has its own header from the template and never shows the label; it is not checked.
+
+Remove the override and the CI step when `ig.ini` points to a template version that contains 6fc5321 and the label appears without the override.
+
 ### Two `<h2 id="root">` on the profile history page
 
 Applies to: `StructureDefinition-notifiedpull-task.profile.history.html`. The template's `layouts/layout-profile-history.html` has two `<h2 id="root">` lines in a row, and the second is not closed (fixed on `main` in [5b8c9667](https://github.com/HL7/ig-template-base2/commit/5b8c9667)). The publisher's WCAG check reports it as an error, listed in `qa.txt` and `qa.json` but not in `qa.xml`. Allowlisted in [known-errors.txt](known-errors.txt) (location `output/en/StructureDefinition-notifiedpull-task.profile.history.html`, message `The page has more than one top level heading: <h2> (no text) … (WCAG compliance test)`). Remove the line when the template is fixed. A new profile adds a line.

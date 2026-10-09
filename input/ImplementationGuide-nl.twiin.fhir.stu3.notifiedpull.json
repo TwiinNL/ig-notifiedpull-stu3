@@ -41,6 +41,12 @@
       "nameUrl": "index.html",
       "title": "Notified Pull (STU3)",
       "generation": "markdown"
-    }
+    },
+    "parameter": [
+      {
+        "code": "releaselabel",
+        "value": "Draft – normative only when referenced by the Twiin afsprakenstelsel"
+      }
+    ]
   }
 }
