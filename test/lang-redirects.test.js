@@ -20,13 +20,13 @@ if (fs.existsSync(TEMPLATE_ORIGINAL) && sha256(TEMPLATE_ORIGINAL) !== TEMPLATE_O
   console.log(`::notice::${TEMPLATE_ORIGINAL} differs from the 0.1.0 version; check whether ${OVERRIDE} is still needed`);
 }
 
-// Only in this repository: the IG has jurisdiction NL, and the template does not put the flag
-// assets/images/nld.svg in output/en/, where every page looks for it.
+// Only in this repository: the IG has jurisdiction NL, and the build writes the flag
+// assets/images/nld.svg to output/ but not to output/en/, where every page looks for it. Our own
+// file is copied to output/en/; the build's own file in output/ is not replaced by it.
 const FLAG = "input/images/assets/images/nld.svg";
-for (const copy of ["output/assets/images/nld.svg", "output/en/assets/images/nld.svg"]) {
-  if (!fs.existsSync(copy)) fail(`${copy} is missing`);
-  else if (sha256(copy) !== sha256(FLAG)) fail(`${copy} is not ${FLAG}`);
-}
+if (!fs.existsSync("output/assets/images/nld.svg")) fail("output/assets/images/nld.svg is missing");
+if (!fs.existsSync("output/en/assets/images/nld.svg")) fail("output/en/assets/images/nld.svg is missing");
+else if (sha256("output/en/assets/images/nld.svg") !== sha256(FLAG)) fail(`output/en/assets/images/nld.svg is not ${FLAG}`);
 
 for (const copy of OUTPUT_COPIES) {
   if (!fs.existsSync(copy)) { fail(`${copy} is missing`); continue; }
