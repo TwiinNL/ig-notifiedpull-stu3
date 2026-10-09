@@ -26,6 +26,10 @@ jobs:
       - name: Install Jekyll
         run: gem install jekyll
 
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+
       # Pinned: the errors check below depends on the qa.json layout of this version.
       - name: Download IG Publisher
         env:
@@ -46,7 +50,13 @@ jobs:
           path: output/
           if-no-files-found: warn
 
+      # The template's lang-redirects.js is overridden by input/images/assets/js/; fail if the
+      # override did not take effect or the redirect does not work. See known-issues.md.
+      - name: Test language redirect
+        run: node test/lang-redirects.test.js
+
       # The publisher exits with 0 even when qa.html reports errors, so check the
-      # errors ourselves: every error in output/qa.xml must be listed in known-errors.txt.
+      # errors ourselves: every error in output/qa.xml and output/qa.txt must be listed
+      # in known-errors.txt.
       - name: Fail on unknown errors in QA report
         run: python3 .github/scripts/check-qa.py
