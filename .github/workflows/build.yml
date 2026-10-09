@@ -55,6 +55,11 @@ jobs:
       - name: Test language redirect
         run: node test/lang-redirects.test.js
 
+      # The template's fragment-pagebegin.html is overridden by input/includes/ to show the release
+      # label; fail if the label is missing or the template file changed. See known-issues.md.
+      - name: Test release label
+        run: node test/release-label.test.js
+
       # The publisher exits with 0 even when qa.html reports errors, so check the
       # errors ourselves: every error in output/qa.xml and output/qa.txt must be listed
       # in known-errors.txt.
