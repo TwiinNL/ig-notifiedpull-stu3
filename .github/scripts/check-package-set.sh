@@ -12,6 +12,10 @@ lock="$(cd "$(dirname "$0")/.." && pwd)/fhir-packages.lock"
 now="$(mktemp)"
 trap 'rm -f "$now"' EXIT
 
+# The publisher installs the IG's own build as <packageId>#dev. That is build output, not a
+# dependency: remove it so that it is never saved to the cache or restored from it.
+find "$cache" -mindepth 1 -maxdepth 1 -type d -name '*#dev' -exec rm -rf {} +
+
 find "$cache" -mindepth 1 -maxdepth 1 -type d -name '*#*' -exec basename {} \; | LC_ALL=C sort > "$now"
 echo "Packages in $cache:"
 cat "$now"
