@@ -2,38 +2,23 @@
 // Checks the language redirect of the published stub pages: every browser language ends up on
 // en/<page>, and query string and fragment are kept. After a build, run from the repo root:
 //   node test/lang-redirects.test.js
-// See known-issues.md, "Template 0.1.0 redirect stops after the first language".
+// The script comes from twiin.base.template; whether it is the right file is checked in the
+// template repository, here only what the build delivers.
 const fs = require("fs");
-const crypto = require("crypto");
 
-const OVERRIDE = "input/images/assets/js/lang-redirects.js";
 const OUTPUT_COPIES = ["output/assets/js/lang-redirects.js", "output/en/assets/js/lang-redirects.js"];
-const TEMPLATE_ORIGINAL = "template/content/assets/js/lang-redirects.js";
-// SHA-256 of the file in fhir2.base.template#0.1.0, the known faulty version.
-const TEMPLATE_ORIGINAL_SHA256 = "7ea6ae46a27c877dc47cc7ac0df4cc05f01b8debcbeec66db372da7577e92383";
 
-const sha256 = (file) => crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex");
 let failed = false;
 const fail = (msg) => { console.log(`::error::${msg}`); failed = true; };
 
-if (fs.existsSync(TEMPLATE_ORIGINAL) && sha256(TEMPLATE_ORIGINAL) !== TEMPLATE_ORIGINAL_SHA256) {
-  console.log(`::notice::${TEMPLATE_ORIGINAL} differs from the 0.1.0 version; check whether ${OVERRIDE} is still needed`);
+// Only in this repository: the IG has jurisdiction NL; every page in output/en/ looks for the flag
+// assets/images/nld.svg there. The template delivers it; the test checks that the build has it.
+for (const flag of ["output/assets/images/nld.svg", "output/en/assets/images/nld.svg"]) {
+  if (!fs.existsSync(flag)) fail(`${flag} is missing`);
 }
-
-// Only in this repository: the IG has jurisdiction NL, and the build writes the flag
-// assets/images/nld.svg to output/ but not to output/en/, where every page looks for it. Our own
-// file is copied to output/en/; the build's own file in output/ is not replaced by it.
-const FLAG = "input/images/assets/images/nld.svg";
-if (!fs.existsSync("output/assets/images/nld.svg")) fail("output/assets/images/nld.svg is missing");
-if (!fs.existsSync("output/en/assets/images/nld.svg")) fail("output/en/assets/images/nld.svg is missing");
-else if (sha256("output/en/assets/images/nld.svg") !== sha256(FLAG)) fail(`output/en/assets/images/nld.svg is not ${FLAG}`);
 
 for (const copy of OUTPUT_COPIES) {
   if (!fs.existsSync(copy)) { fail(`${copy} is missing`); continue; }
-  if (sha256(copy) !== sha256(OVERRIDE)) {
-    fail(`${copy} is not ${OVERRIDE}: the override of the template file did not take effect`);
-    continue;
-  }
   const src = fs.readFileSync(copy, "utf8");
   // [language, pathname, search, hash, expected]
   const cases = [
