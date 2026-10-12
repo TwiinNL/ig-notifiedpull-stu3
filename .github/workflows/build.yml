@@ -36,9 +36,10 @@ jobs:
       - name: Put Jekyll on the PATH
         run: |
           mkdir -p "$RUNNER_TEMP/bin"
-          printf '#!/usr/bin/env bash
-exec bundle exec jekyll "$@"
-' > "$RUNNER_TEMP/bin/jekyll"
+          {
+            echo '#!/usr/bin/env bash'
+            echo 'exec bundle exec jekyll "$@"'
+          } > "$RUNNER_TEMP/bin/jekyll"
           chmod +x "$RUNNER_TEMP/bin/jekyll"
           echo "$RUNNER_TEMP/bin" >> "$GITHUB_PATH"
           "$RUNNER_TEMP/bin/jekyll" --version
