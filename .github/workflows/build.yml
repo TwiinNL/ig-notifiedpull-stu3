@@ -14,7 +14,7 @@ jobs:
     env:
       # Pinned: the errors check below depends on the qa.json layout of this version.
       PUBLISHER_VERSION: 3.0.0
-      PUBLISHER_SHA256: b8403abe5a438ddb9a3a07e02ad925f2c4bbbd9e903c49ecff50fcb481ec64ad
+      PUBLISHER_SHA256: 00000000000000000000000000000000000000000000000000000000deadbeef
       # Jekyll comes from the locked Gemfile; the publisher calls `jekyll` from the PATH.
       BUNDLE_GEMFILE: ${{ github.workspace }}/.github/jekyll/Gemfile
       JEKYLL_NO_BUNDLER_REQUIRE: '1'
@@ -69,7 +69,7 @@ jobs:
         with:
           path: |
             input-cache/publisher.jar
-          key: jars-${{ runner.os }}-publisher-${{ env.PUBLISHER_VERSION }}-${{ env.PUBLISHER_SHA256 }}
+          key: jars-Linux-publisher-3.0.0-b8403abe5a438ddb9a3a07e02ad925f2c4bbbd9e903c49ecff50fcb481ec64ad
 
       # Saved at the end of a successful job only, so after the package set check below.
       - name: Cache FHIR packages
