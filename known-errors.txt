@@ -1,4 +1,5 @@
 # Publisher errors that are accepted, one per line, matched exactly as "<location>: <message>".
+# The errors and warnings of the Publication Request row of qa.html use the location "Publication Request".
 # See known-issues.md before adding anything here.
 # Messages are English: ImplementationGuide.language=en takes precedence over the nl_NL that the publisher would infer from ImplementationGuide.jurisdiction=NL.
 ImplementationGuide/nl.twiin.fhir.stu3.notifiedpull: ImplementationGuide.dependency[0]: The extension http://hl7.org/fhir/tools/StructureDefinition/implementationguide-dependency-comment v1.3.0 is not allowed to be used at this point (this element is [BackboneElement, ImplementationGuide.dependency]; allowed for this version = e:ImplementationGuide.dependsOn)

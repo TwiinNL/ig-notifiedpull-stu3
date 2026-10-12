@@ -114,9 +114,14 @@ jobs:
       - name: Test release label
         run: node test/release-label.test.js
 
+      # Parsing of the Publication Request row of qa.html in check-qa.py; needs no build.
+      - name: Test QA check
+        run: python3 test/check-qa.test.py
+
       # The publisher exits with 0 even when qa.html reports errors, so check the
       # errors ourselves: every error in output/qa.xml and output/qa.txt must be listed
-      # in known-errors.txt.
+      # in known-errors.txt, and so must every error and warning of the Publication Request (only in
+      # qa.html).
       - name: Fail on unknown errors in QA report
         run: python3 .github/scripts/check-qa.py
 
