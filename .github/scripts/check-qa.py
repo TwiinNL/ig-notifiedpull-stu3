@@ -20,6 +20,10 @@ the publication request check only in qa.html:
   messages are ignored. Only checked when the repository has a publication-request.json: the
   section must then be there, show that the request was read (the row RelatedIgs of its summary)
   and be readable, or the check fails.
+  A request whose version is already in the live package-list.json of the canonical (the
+  canonical of output/package.tgz, as PublicationChecker.java:185 uses it) has been carried out:
+  the messages that follow only from that (PUBLISHED_MESSAGES) do not block; all other messages
+  do. If the package-list cannot be read, the request is checked in full.
 The errors of qa.xml and qa.txt, counted once when both report them, must equal "errs" in
 output/qa.json. Lines are compared exactly with the non-comment lines of known-errors.txt.
 """
@@ -28,6 +32,8 @@ import json
 import os
 import re
 import sys
+import tarfile
+import urllib.request
 import xml.etree.ElementTree as ET
 from collections import Counter
 
@@ -123,6 +129,39 @@ def publication_request(qa_html):
     return result
 
 
+# Messages of PublicationChecker (IG Publisher 3.0.0) that follow only from the version of the
+# request being in the package-list: :235/:240 (warning), :259 (first: true) and :275 (error;
+# the checker stops checking the request there).
+PUBLISHED_MESSAGES = [
+    "Version {v} has already been published",
+    "This is not the first publication, so first must not be true",
+    "Publication Request is for version v{v} which is already published",
+]
+
+
+def published_versions(package_tgz):
+    """Versions in the live package-list.json at the canonical of the built package, or None if
+    it cannot be read."""
+    try:
+        with tarfile.open(package_tgz) as t:
+            canonical = json.load(t.extractfile("package/package.json"))["canonical"]
+        url = canonical.rstrip("/") + "/package-list.json"
+        with urllib.request.urlopen(url, timeout=30) as r:
+            return [e.get("version") for e in json.load(r)["list"]]
+    except Exception as e:
+        print(f"::notice::cannot read the live package-list.json ({e}); Publication Request checked in full")
+        return None
+
+
+def without_published(pub, version, published):
+    """Returns (messages, waived): when version is in published, the (severity, message) pairs
+    of PUBLISHED_MESSAGES are left out and waived is True; otherwise pub is returned as is."""
+    if not version or not published or version not in published:
+        return pub, False
+    skip = {m.format(v=version) for m in PUBLISHED_MESSAGES}
+    return [(s, m) for s, m in pub if m not in skip], True
+
+
 def main():
     from_xml = errors("output/qa.xml")
     from_txt = txt_errors("output/qa.txt")
@@ -132,7 +171,13 @@ def main():
     pub_failed = False
     if os.path.exists("publication-request.json"):
         try:
-            pub = [f"{PUB_LOCATION}: {m}" for s, m in publication_request("output/qa.html") if s != "info"]
+            pub = publication_request("output/qa.html")
+            with open("publication-request.json", encoding="utf-8") as f:
+                version = json.load(f).get("version")
+            pub, waived = without_published(pub, version, published_versions("output/package.tgz"))
+            if waived:
+                print(f"Publication Request for {version}: already published, not checked")
+            pub = [f"{PUB_LOCATION}: {m}" for s, m in pub if s != "info"]
         except PublicationRequestError as e:
             print(f"::error::Publication Request in output/qa.html cannot be checked: {e}")
             pub_failed = True
