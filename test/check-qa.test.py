@@ -72,4 +72,21 @@ for name, html in [
         check(name + " raises", False)
     except check_qa.PublicationRequestError:
         check(name + " raises", True)
+
+# A request that has been carried out: its version is in the live package-list.
+DONE = [("warning", "Version 0.1.1-draft has already been published"),
+        ("error", "This is not the first publication, so first must not be true"),
+        ("error", "Publication Request is for version v0.1.1-draft which is already published"),
+        ("error", "Package ID mismatch. This package is a but the website has b")]
+check("published version: its messages do not block, others do",
+      check_qa.without_published(DONE, "0.1.1-draft", ["current", "0.1.1-draft"]) ==
+      ([("error", "Package ID mismatch. This package is a but the website has b")], True))
+check("unpublished version: everything is checked",
+      check_qa.without_published(DONE + [("error", "No publication request status found")], "0.1.2-draft", ["current", "0.1.1-draft"]) ==
+      (DONE + [("error", "No publication request status found")], False))
+check("message about another version is not waived",
+      check_qa.without_published([("warning", "Version 0.1.0-draft has already been published")], "0.1.1-draft", ["0.1.1-draft"]) ==
+      ([("warning", "Version 0.1.0-draft has already been published")], True))
+check("package-list unreadable: everything is checked",
+      check_qa.without_published(DONE, "0.1.1-draft", None) == (DONE, False))
 sys.exit(1 if failed else 0)
